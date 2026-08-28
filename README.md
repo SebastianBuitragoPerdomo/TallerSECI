@@ -1,0 +1,2 @@
+# TallerSECI
+taller en grupo
