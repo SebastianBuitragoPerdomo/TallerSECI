@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Muro de Mensajes</title>
+</head>
+<body>
+    <h1>Muro del Equipo</h1>
+    
+    <!-- Formulario para enviar el mensaje -->
+    <input type="text" id="autor" placeholder="Tu Nombre">
+    <input type="text" id="texto" placeholder="Escribe un mensaje">
+    <button onclick="enviarMensaje()">Enviar a la API</button>
+
+    <hr>
+    <h3>Mensajes Recibidos:</h3>
+    <ul id="lista-mensajes"></ul>
+
+    <script>
+        // Función para enviar datos al Backend
+        async function enviarMensaje() {
+            const autor = document.getElementById('autor').value;
+            const texto = document.getElementById('texto').value;
+
+            await fetch('/api/mensajes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ autor: autor, texto: texto })
+            });
+            
+            cargarMensajes(); // Recargar la lista después de enviar
+        }
+
+        // Función para pedir datos al Backend
+        async function cargarMensajes() {
+            const respuesta = await fetch('/api/mensajes');
+            const mensajes = await respuesta.json();
+            
+            const lista = document.getElementById('lista-mensajes');
+            lista.innerHTML = '';
+            mensajes.forEach(m => {
+                lista.innerHTML += `<li><b>${m.autor}:</b> ${m.texto}</li>`;
+            });
+        }
+
+        cargarMensajes(); // Cargar al abrir la página
+    </script>
+</body>
+</html>
